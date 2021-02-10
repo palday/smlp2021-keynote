@@ -1,10 +1,11 @@
 ---
-title: "The past, present and future (role) of statistics in linguistics and psychology"
-date: January 2021
+title: "Putting the NO in ANOVA: the past, present and future (role) of statistics in linguistics and psychology"
+date: Early 2021
 author: Phillip M. Alday
 ---
 
-Language science and psychological science have an uneasy relationship with statistics.
-Both fields lie at the intersection of the humanities and the natural-biological sciences and have a mixture of introspective and empirical traditions.
-Both fields also have to deal with some of the most difficult, challenging subject matter: human behavior, which has led some to label them "soft sciences" and others to label them the "hardest science".
-Unfortunately, these challenges are rarely acknowledged
+Language science and psychological science have an uneasy relationship with statistics, both as a tool for dealing with data and a tool for building theories.
+In this talk, I will discuss the historical disappointments and resulting prejudices against statistics as well as critical insights made possible by statistics, before discussing the current state of the field.
+In particular, I will discuss what modern, computer-age statistical practice -- such as mixed-effects models, Bayesian statistics and machine learning -- has to offer compared to traditional tools and why it's time to use tools that Clark and Cohen could have only dreamed of.
+I will focus on modern statistical approaches as a tool for theory building -- both for theories with stochastic and variable components and as a tool for handling messy and variable real-world data -- instead of as an alternative to theory building.
+Finally, I will conclude with my vision for (the role of) statistics in the future of psychology and linguistics and provide a few suggestions for how to achieve that vision.
