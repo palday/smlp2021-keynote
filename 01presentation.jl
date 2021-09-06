@@ -44,9 +44,9 @@ md"""
 ## Who am I?
 
 - studied math (**not** statistics!) and German as an undergraduate
-- Masters on language change (regular and irregular verbs in West Germanic)
+- masters on language change (regular and irregular verbs in West Germanic)
 - doctorate in psycholinguistics, with a focus on EEG and designs that aren't possible under the ANOVA framework (naturalistic stimuli, adaptive experiments, and computational modelling)
-- postdocs in cognitive neuroscience (Uni SA, Adelaide) and psycholinguistics (MPI, Nijmegen)
+- postdocs in cognitive neuroscience (UniSA) and psycholinguistics (MPI)
 - now a neuroscientist in the private sector, looking at improving neurology
 - occasional, but well meaning troll: 
   - [Who’s gotta p? Tripping up statistics in the garden of forking paths](https://hg.sr.ht/~palday/asa-adelaide2016/raw/optional-stopping-in-the-garden.pdf)
@@ -84,8 +84,9 @@ end
 
 # ╔═╡ f02d9156-04b3-4e2a-85e0-2fd6612471de
 begin
-	a = randn(MersenneTwister(1), 20)
-	b = randn(MersenneTwister(2), 20) .+ 0.5
+	n = 20
+	a = randn(MersenneTwister(1), n)
+	b = randn(MersenneTwister(2), n) .+ 0.5
 	OneSampleTTest(a,b)
 end
 
@@ -122,7 +123,7 @@ md"""
   - approximate solutions to exact problems
 - Direct vs. iterative methods
 - Bayes Theorem
-- Frequentist and Bayesian conceptions of porbability 
+- Frequentist and Bayesian conceptions of probability 
 
 """
 
@@ -137,9 +138,6 @@ md"""
 - If you choose ignorance, your students are your only salvation because you won't be able to afford statistical support on the free market. 
 - (But ideally, you would choose to evolve and not be a dinosaur.)
 """
-
-
-# ╔═╡ b5eacfc4-63d3-4730-8a67-feb458ca9d5c
 
 
 # ╔═╡ ecca8530-3f8d-41c1-ad70-f872a947da4b
@@ -188,6 +186,12 @@ md"""
 - Following the availability of this computational infrastructure, the expectation arose to actually use it.
 - "We handed the kids the keys to the F-16" 
 - We gained access to powerful tools that Clark and Cohen could only dream of, but then complained that the it took too much skill to operate a lathe and that we should go back to wittling without pocket knives.
+"""
+
+# ╔═╡ 3cdfff8d-5697-4b42-86f3-c1d363488f5d
+md"""> [And dividing and conquering, bringing statisticians onto our papers in author roles raises problems. There aren’t enough statisticians to serve as authors *and reviewers* on all our papers. And it’s limiting for the statisticians themselves, as they spend less time in lead roles.(https://mobile.twitter.com/victorf13/status/1341391146669363200)
+
+All the instructors at this summer school show the fallacy of this comment.
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
@@ -1312,15 +1316,15 @@ version = "3.5.0+0"
 # ╠═965a5db0-e1bb-48ad-963f-4335c3d3cb86
 # ╟─c732429c-c25c-47a9-b1d9-2b4535c49dfe
 # ╟─c8d96e96-4b76-4192-9a66-6c1fca243bac
-# ╟─f02d9156-04b3-4e2a-85e0-2fd6612471de
+# ╠═f02d9156-04b3-4e2a-85e0-2fd6612471de
 # ╠═9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
 # ╠═82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
-# ╠═1edd814d-4819-4427-98ad-2b74bb4326c8
+# ╟─1edd814d-4819-4427-98ad-2b74bb4326c8
 # ╟─de18cd52-b588-4912-902c-3a150bfc5111
-# ╠═b5eacfc4-63d3-4730-8a67-feb458ca9d5c
 # ╟─ecca8530-3f8d-41c1-ad70-f872a947da4b
 # ╟─f09fd24a-83d0-4acd-b749-a06a27743c71
 # ╠═068b5e76-4a38-4f85-a23b-88ea78b06e30
 # ╠═ffc4449d-8560-4489-b3d8-c0e8ac4f324c
+# ╠═3cdfff8d-5697-4b42-86f3-c1d363488f5d
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
