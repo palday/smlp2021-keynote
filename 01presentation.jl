@@ -4,23 +4,45 @@
 using Markdown
 using InteractiveUtils
 
+# This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
+macro bind(def, element)
+    quote
+        local el = $(esc(element))
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        el
+    end
+end
+
 # ╔═╡ 965a5db0-e1bb-48ad-963f-4335c3d3cb86
 begin 
 	using Random
 	using HypothesisTests
+	using StatsBase
 	using CairoMakie
 	CairoMakie.activate!(type="svg")
+	using StatsBase: PValue
 	using AlgebraOfGraphics
+	using PlutoUI
 end
 
 # ╔═╡ 6d4debdf-9099-47f2-bc2a-abfa35098aba
 html"<button onclick=present()>Presentation mode</button>"
 
+# ╔═╡ c732429c-c25c-47a9-b1d9-2b4535c49dfe
+begin
+	const RNG = MersenneTwister(42)
+	bign = 10_000
+	tinyeffect = 0.05
+	x = randn(RNG, bign)
+	y = randn(RNG, bign) .+ tinyeffect
+	bigntest = OneSampleTTest(x,y)
+end;
+
 # ╔═╡ 0989bb85-e5d7-48dc-a489-845d2164288e
 md"""
 # Putting the NO in ANOVA: the past, present and future (role) of statistics in linguistics and psychology
 
-*Phillip M. Alday* -- no academic affiliation
+*Phillip M. Alday* -- no academic affiliation, [www.phillipalday.com](https://www.phillipalday.com)
 """
 
 # ╔═╡ ab25f659-c319-4a80-b1a6-6c0ec16959e1
@@ -33,9 +55,9 @@ html"""
 """
 
 # ╔═╡ 58de8fa1-7024-4438-8abf-3731e39f0c2e
-md"""Vic, you not washing your hands behind closed doors is making the entire community sick....
+# Ignorance is not something a scientist should be proud of, but it's best not to dwell too long on the fate of the dinosaurs.
 
-Ignorance is not something a scientist should be proud of, but it's best not to dwell too long on the fate of the dinosaurs.
+md"""Vic, you not washing your hands behind closed doors is making the entire community sick....
 """
 
 # ╔═╡ 9f1fc007-b3b3-4bdc-9aa9-193a11182296
@@ -43,18 +65,215 @@ md"""
 
 ## Who am I?
 
-- studied math (**not** statistics!) and German as an undergraduate
-- masters on language change (regular and irregular verbs in West Germanic)
-- doctorate in psycholinguistics, with a focus on EEG and designs that aren't possible under the ANOVA framework (naturalistic stimuli, adaptive experiments, and computational modelling)
-- postdocs in cognitive neuroscience (UniSA) and psycholinguistics (MPI)
-- now a neuroscientist in the private sector, looking at improving neurology
-- occasional, but well meaning troll: 
+- 🇺🇸 studied math (**not** statistics!) and German as an undergraduate
+- 🇩🇪 masters on language change (regular and irregular verbs in West Germanic)
+- 🇩🇪 doctorate in psycholinguistics, with a focus on EEG and designs that aren't possible under the ANOVA framework (naturalistic stimuli, adaptive experiments, and computational modelling)
+- 🇦🇺🇳🇱 postdocs in cognitive neuroscience and psycholinguistics
+- 🇺🇸 now a neuroscientist in the private sector, looking at improving neurology
+- 👉🐻 occasional, but well meaning troll: 
   - [Who’s gotta p? Tripping up statistics in the garden of forking paths](https://hg.sr.ht/~palday/asa-adelaide2016/raw/optional-stopping-in-the-garden.pdf)
   - [Ban the t test!](https://hg.sr.ht/~palday/ban-the-t-test)
-- also a white, cis hetero male working in biotech, so *a **ton** of privilege*
+- 🎗️ also a white, cis hetero male working in biotech, so *a **ton** of privilege*
 
 
 *My opinions are my own and do not represent those of my employer (neither past nor present), nor of my collaborators, mentors and friends.*
+"""
+
+# ╔═╡ 4c878250-daa9-4b01-a0ec-fc96cd430ace
+md"""# The Past"""
+
+# ╔═╡ 045b7a84-ae00-4b62-965f-533244372023
+md"""
+##  Our old friend the $t$-Test
+
+### Need to generalize from small samples because  ...
+
+- Collecting less data means faster testing
+- Fewer numbers easier before computers
+- You can't sell what you drink
+- Being drunk at work generally frowned upon
+"""
+
+# ╔═╡ dd2ef900-88dc-42cb-807f-f412cf70c73e
+md"""
+
+## How are $p$-values actually computed?
+
+1. Under the null hypothesis, test statistics -- all those "letter values" have a known distribution
+  - either analytic: $z$, $t$, $F$, $\chi^2$, etc.
+  - or empirically determined: bootstrapping and other resampling methods
+2. Compute the test statistic
+  * t-test: mean divided by standard error
+  * F-test: between vs. within group variance
+  * degrees of freedom compensate for small samples
+3. Compare it to the reference distribution
+  - Old way: use a table and find out what your $p$-value is less than
+  - New way: have the computer figure out a precise value
+"""
+
+# ╔═╡ cb17bdbc-0905-4b3f-8765-57beb964904d
+md"""
+##
+
+But Student's paper came out about 20 years before Fisher and the rest developed the notion of statistical significance.
+"""
+
+# ╔═╡ 305154c9-8e76-4789-b193-aed0af0e96e9
+md"""
+## Student's contribution
+
+- Consider situations where the sample isn't so large it behaves like the population
+
+- Propose a small-samples method for estimating the uncertainty
+
+- Finding the reference distribution for $t$-values under a certain set of assumptions (=null hypothesis).
+
+- Do all of this based on intuition and simulation!
+
+"""
+
+# ╔═╡ 122cf668-4b3b-4e75-9c53-6a8f70f45059
+md"""
+
+## Let's get technical for a second....
+
+-  "Reference distributions"  are *sampling distributions*, which are the distributions we would see for a particular value when estimating that value from repeated sampling of a population.
+
+- All of the components of a $t$-value have their own sampling distribution.
+
+- Gosset figured out the standard deviation of the sampling distribution of the mean, i.e. the standard error, hence the title *On the probable error of the mean*.
+
+- He showed that that the sampling distribution of this standard error was dependent on sample size (later corrected with Fisher's help to degrees of freedom).
+
+- He then posited a distribution for that the ratio of estimate to the error, i.e. for the $t$-value.
+
+- All of this about 20 years before Fisher and the rest developed the notion of statistical significance!
+"""
+
+# ╔═╡ 24c2cafa-d7f9-4a93-a964-265a373b43ba
+md"""
+
+## There is only one $t$-test
+
+### Paired t-test
+same as one-sample t-test computed on the paired differences
+
+### Two-sample t-test
+computed on difference of group means and using an aggregate (pooled) measure of uncertainty
+
+### Welch's t-test
+same t-values as above, but degrees of freedom corrected for unequal variance
+
+!!! note
+	Many "corrections" in classical testing correct the degrees of freedom, not the test statistic, such as Welch-Satterthwaite, Kenward-Roger, Greenhouse-Geisser, Huynh-Feldt.
+"""
+
+# ╔═╡ 293ec083-f05e-4cc8-9597-6742dee4afee
+md"""
+
+## A significant step: moving from estimated error to stargazing
+
+![](https://secureservercdn.net/192.169.220.85/hk8.901.myftpupload.com/wp-content/uploads/2020/02/heres-where.png)
+"""
+
+# ╔═╡ 59c61df8-6e0e-4734-9da4-f2edc49535c6
+md"""
+## Ploughing through
+
+- Statistical testing was developed for small samples with big effects:
+  - Basic quality control (t-test)
+  - Farming techniques and fertilizer (F-test and split-plot designs)
+- And were seen an extending the large-sample statistics developed for biometrics and *eugenics*
+- And were viewed skeptically even back then, cf. *Karl Pearson* on $n$ vs. $n-1$:
+  > because only naughty brewers take n so small that the difference is not of the order of the probable error! 
+"""
+
+# ╔═╡ c8d96e96-4b76-4192-9a66-6c1fca243bac
+let f = Figure(), ax = Axis(f[1, 1])
+	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
+	density!(ax, x; label="x", color=colors[1])	
+	density!(ax, y; label="y", color=colors[2])
+	ax.title[] = "Within-subjects n=$(bign) and Cohen's d=$(tinyeffect), p = $(PValue(pvalue(bigntest)))"
+	f
+end
+
+# ╔═╡ 4febe8bf-24f2-4717-927c-ec8793a8981c
+md"""
+
+# The Present-ish 
+
+"""
+
+# ╔═╡ ecca8530-3f8d-41c1-ad70-f872a947da4b
+md"""
+## Lightning Round: Everything Old is New Again
+"""
+
+# ╔═╡ f09fd24a-83d0-4acd-b749-a06a27743c71
+html"""
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en" data-dnt="true"><p lang="en" dir="ltr">Honestly? For most of what I do, statistical advances since Clark (1973) haven&#39;t done much. I agree for new methods with different (and lots of) data (especially huge databases), new techniques have been very important.</p>&mdash; Victor Ferreira (@victorf13) <a href="https://twitter.com/victorf13/status/1341115351308718080?ref_src=twsrc%5Etfw">December 21, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+"""
+
+# ╔═╡ 068b5e76-4a38-4f85-a23b-88ea78b06e30
+md"""
+## Before Clark's seminal paper
+
+- Bayesian statistics (in terms of interpretation of 'probability', not in the sense of Bayes' Theorem): Laplace (1812), Jeffreys (1939, 1946), Savage (1954), de Finetti (1937)
+- stochastic / MCMC methods: Metropolis and Ulam (1949), Markov, 
+- estimation instead of significance (the "new" statistics): Gauss and Legendre (around 1800), Pearson, Gosset (around 1900); Neyman for confidence (1937)
+- shrinkage: Tikhonov (1943), Stein (1956), etc.
+- multi-level ("mixed") models: Fisher (1918, random effects models for phylogenetics), Henderson (1950)
+- probit regression (Bliss 1934), logistic regression (Wilson and Worecster 1943, Cox 1958)
+- "Generalizing to a Language Population" (Coleman 1964)
+- power analysis and effect sizes: (Cohen 1962, 1969, 1988, 1990, 1994, ....)
+- Simpson's paradox (Simpson 1951, potentially Pearson around 1900)
+- Meehl's Paradox (1967)
+- Cross-validation (early 1970s)
+- early robust statistics (Wilcoxon 1945, Mann-Whitney 1947, etc.)
+"""
+
+# ╔═╡ bcdbf594-82b0-4045-837f-e46f1c729a05
+# <!-- - mixed-models for longitudinal data (Laird and Ware 1982) -->
+md"""
+## Before I was born:
+- GLM for practioners (McCullagh and Nelder 1983)
+- GAMs (Hastie and Tibshirani 1986)
+- modern robust methods (e.g. Huber 1981)
+- resampling methods: jackknife (Tukey 1958, Jaeckel 1972), bootstrap (Efron 1979)
+- *Exploratory Data Analysis*, including boxplot (Tukey 1977)
+"""
+
+# ╔═╡ ffc4449d-8560-4489-b3d8-c0e8ac4f324c
+md"""
+
+## What has actually changed in the last 10-20 years?
+
+- Computers became fast and readily available.
+- Software for many of these methods became freely available and comparatively usable.
+- Following the availability of this computational infrastructure, the expectation arose to actually use it.
+- We gained access to powerful tools that Clark and Cohen could only dream of, but then complained that the it took too much skill to operate a lathe and that we should go back to wittling with pocket knives.
+"""
+
+# ╔═╡ 7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
+md"""
+> The tool that is so dull that you cannot cut yourself on it is not likely to be sharp enough to be either useful or helpful. 
+
+-- *John Tukey*
+"""
+
+# ╔═╡ 2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
+md""" 
+
+## Meta-Science and the Replication Crisis
+
+We discoverd just how poorly we understood and hence practiced experimental design and control: 
+  - multiple comparisons
+  - optional stoppping
+  - circular analysis
+  - researcher degrees of freedom (Simmons et al. 2011), "garden of forking paths" (Gelman and Loken 2013)
+  - paradoxes of power (cf. Type-S & Type-M error Gelman and Carlin 2014)
+  - general reporting (if you're using ANOVA, do you always report if you're using Type-1/2/3 ?)
+
 """
 
 # ╔═╡ 51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
@@ -62,41 +281,36 @@ md"""
 
 ## Statistics is about data and uncertainty
 
-- Science must be empirical
+This has always been hard and we've been messing it up from the beginning, even things that feel like push-button procedures (e.g. ANOVA).
+"""
+
+# ╔═╡ 232cf949-c5d5-462e-b26e-f37eb2a7cfdd
+md"""## Cohen warned you about this in the 1960s...."""
+
+# ╔═╡ 10f21faa-1305-4011-8f88-e15d4c4937a7
+html"""
+<blockquote class="twitter-tweet" data-conversation="none" data-lang="en" data-dnt="true"><p lang="en" dir="ltr">We’re now running 2x2 experiments with 100s of subjects because our complex models require that large an N to test for possible effects we’re not the slightest bit interested in. These Ss have to be paid for or recruited as &quot;volunteers&quot;.</p>&mdash; Fernanda Ferreira (@fernandaedi) <a href="https://twitter.com/fernandaedi/status/1340693039749058560?ref_src=twsrc%5Etfw">December 20, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+"""
+
+# ╔═╡ 7791cef0-6dd1-4655-be02-16568c4222a6
+md"""
+> The combination of some data and an aching desire for an answer does not ensure that a reasonable answer can be extracted from a given body of data. 
+*John Tukey*
+"""
+
+# ╔═╡ 3d48c445-6e4f-4319-976e-998d41271d77
+md"""
+
+## Measure twice, cut once
+
+- Your analysis plan is part of your experimental plan.
+- Use simulation 
+- Don't depend on defaults.
 
 """
 
-# ╔═╡ c732429c-c25c-47a9-b1d9-2b4535c49dfe
-begin
-	const RNG = MersenneTwister(42)
-	x = randn(RNG, 10_000)
-	y = randn(RNG, 10_000) .+ 0.10
-	OneSampleTTest(x,y)
-end
+# ╔═╡ d705232d-81ef-4788-9a22-34b7e874bd10
 
-# ╔═╡ c8d96e96-4b76-4192-9a66-6c1fca243bac
-let f = Figure(), ax = Axis(f[1, 1])
-	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
-	density!(ax, x; label="x", color=colors[1])	
-	density!(ax, y; label="y", color=colors[2])
-	f
-end
-
-# ╔═╡ f02d9156-04b3-4e2a-85e0-2fd6612471de
-begin
-	n = 20
-	a = randn(MersenneTwister(1), n)
-	b = randn(MersenneTwister(2), n) .+ 0.5
-	OneSampleTTest(a,b)
-end
-
-# ╔═╡ 9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
-let f = Figure(), ax = Axis(f[1, 1])
-	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
-	density!(ax, a; label="a", color=colors[1])	
-	density!(ax, b; label="b", color=colors[2])
-	f
-end
 
 # ╔═╡ 82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
 md"""
@@ -122,15 +336,15 @@ md"""
   - exact methods to approximate problems
   - approximate solutions to exact problems
 - Direct vs. iterative methods
-- Bayes Theorem
+- Bayes Theorem (not just for Bayesians!)
 - Frequentist and Bayesian conceptions of probability 
-
+- What/why are "models" and living with uncertainty
 """
 
 # ╔═╡ de18cd52-b588-4912-902c-3a150bfc5111
 md"""
 
-## Why senior scientists should encourage junior scientists to learn statistics, programming, etc. (i.e. "data stcience")
+## Why senior scientists should encourage junior scientists to learn statistics, programming, etc. (i.e. "data science")
 
 - There are not enough jobs in academia.
 - These skills are highly paid and valuable in the outside world.
@@ -140,59 +354,115 @@ md"""
 """
 
 
-# ╔═╡ ecca8530-3f8d-41c1-ad70-f872a947da4b
-md"""
-## Lightning Round: Everything Old is New Again
-"""
-
-# ╔═╡ f09fd24a-83d0-4acd-b749-a06a27743c71
-html"""
-<blockquote class="twitter-tweet" data-conversation="none" data-lang="en" data-dnt="true"><p lang="en" dir="ltr">Honestly? For most of what I do, statistical advances since Clark (1973) haven&#39;t done much. I agree for new methods with different (and lots of) data (especially huge databases), new techniques have been very important.</p>&mdash; Victor Ferreira (@victorf13) <a href="https://twitter.com/victorf13/status/1341115351308718080?ref_src=twsrc%5Etfw">December 21, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
-"""
-
-# ╔═╡ 068b5e76-4a38-4f85-a23b-88ea78b06e30
-md"""
-### Before Clark's seminal paper
-
-- Bayesian statistics (in terms of interpretation of 'probability', not in the sense of Bayes' Theorem): Laplace, Jeffreys, Savage, de Finetti
-- Stochastic / MCMC methods: Ulam, Markov, 
-- Estimation instead of significance (the "new" statistics): Gauss and Legendre, Pearson, Gosset; Neyman for confidence
-- shrinkage: Tikhonov, Stein, etc.
-- multi-level ("mixed") models: Fisher (1918, random effects models for phylogenetics), Henderson (BLUPs)
-- probit regression: 1904, logistic regression:  1958
-- that 1967 paper on fixed-effects fallacy
-- Power analysis and effect sizes: Cohen 
-- Good data visualization: Tukey
-- Simpson's paradox (1951, potentially ~1900)
-- Meehl's Paradox
-
-### Before I was born:
-- Laird and Ware (1982)
-- McCullagh and Nelder (1983)
-- Hastie, T. & R. Tibshirani (1986) Generalized additive models (with discussion). Statistical Science 1, 297-318.
-- Robust / nonparametric methods: 
-- resampling methods: jackknife, bootstrap (1979)
-- cross validation
-- EDA, including boxplot (Tukey, 1977!)
-"""
-
-# ╔═╡ ffc4449d-8560-4489-b3d8-c0e8ac4f324c
-md"""
-
-## What has actually changed in the last 10-20 years?
-
-- Computers became fast and readily available.
-- Software for many of these methods became freely available and comparatively usable.
-- Following the availability of this computational infrastructure, the expectation arose to actually use it.
-- "We handed the kids the keys to the F-16" 
-- We gained access to powerful tools that Clark and Cohen could only dream of, but then complained that the it took too much skill to operate a lathe and that we should go back to wittling without pocket knives.
-"""
+# ╔═╡ ae1e9c20-770d-4bfa-9a26-12f7416ad7b0
+md"""## This summer school shows the prime facie fallacy of this claim."""
 
 # ╔═╡ 3cdfff8d-5697-4b42-86f3-c1d363488f5d
-md"""> [And dividing and conquering, bringing statisticians onto our papers in author roles raises problems. There aren’t enough statisticians to serve as authors *and reviewers* on all our papers. And it’s limiting for the statisticians themselves, as they spend less time in lead roles.(https://mobile.twitter.com/victorf13/status/1341391146669363200)
+html"""<blockquote class="twitter-tweet" data-lang="en" data-dnt="true"><p lang="en" dir="ltr">And dividing and conquering, bringing statisticians onto our papers in author roles raises problems. There aren’t enough statisticians to serve as authors *and reviewers* on all our papers. And it’s limiting for the statisticians themselves, as they spend less time in lead roles.</p>&mdash; Victor Ferreira (@victorf13) <a href="https://twitter.com/victorf13/status/1341391146669363200?ref_src=twsrc%5Etfw">December 22, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>"""
 
-All the instructors at this summer school show the fallacy of this comment.
+# ╔═╡ 2d6ca834-ed21-4325-94ec-e27f6bbb4b47
+md"""
+## Always a Student
+
+> Dear Fisher
+> 
+> [...]
+>
+> And here I think I hear you murmur "Damn the man, why doesn't he refrain from teaching his granny. He's as fussy about his little bit of stuff as a hen with one chick".
+>
+> To which I reply, "I am, curse you, for the very good reason that I'll never have the chance to incubate an egg which interests me so much".
+>
+> Cluck. Cluck. Cluck. Cluck.
+>
+> [...]
+>
+> I have been shown that my essential cog will hardly ever fit into the machine and when it does is a clog ... then I'll laugh with you-at myself.
+>
+> Cluck.  Cluck.
+>
+> Yrs. v. sincerely,
+> W.S. Gosset
+
+following Boland (1984)
 """
+
+# ╔═╡ bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
+md"""![Poorly Drawn Lines "Start Trying"](https://secureservercdn.net/192.169.220.85/hk8.901.myftpupload.com/wp-content/uploads/2021/05/start-trying_web.png)"""
+
+# ╔═╡ 0b5f8993-ed57-4d92-8f30-615178fca812
+md"""
+
+## Embrace uncertainty
+
+### Why would expect certain, deterministic rules from the study of uncertainty and non determism?
+
+"""
+
+# ╔═╡ 984577f6-0401-4b17-9553-75aebd2c4bb2
+md"""
+
+# Thank you for listening!
+
+And special thanks to:
+
+- The SMLP organizers
+- Center for Interdisciplinary Discipline (ZiF), Bielefeld for financial support
+- Reinhold Kliegl, Doug Bates and Benedikt Ehinger for long discussions on statistics and mixed models
+- Alannah Jones for the inspiration for the title (and being a great student)
+"""
+
+# ╔═╡ af748a0d-af77-415c-8e03-37bab85e7e92
+begin
+	n = 20
+	d = 0.6
+	a = randn(MersenneTwister(4), n)
+	b = randn(MersenneTwister(1), n) .+ d
+	test = OneSampleTTest(a,b);
+end;
+
+# ╔═╡ 9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
+let f = Figure(), ax = Axis(f[1, 1])
+	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
+	density!(ax, a; label="a", color=colors[1])	
+	density!(ax, b; label="b", color=colors[2])
+	ax.title[] = "Within-subjects, n=$(n) and Cohen's d=$(d), p = $(PValue(pvalue(test)))"
+	f
+end
+
+# ╔═╡ cce37f9f-d097-46d5-ab5c-9f27f8911cea
+md"""
+Effect size (Cohen's $d$): $(@bind d_sim PlutoUI.Slider(0:0.1:2; default=0.6, show_value=true))
+
+n participants: $(@bind n_sim PlutoUI.Slider(1:100; default=20, show_value=true))
+
+n iterations: $(@bind n_iter PlutoUI.Slider(1000:100:10_000; default=1000, show_value=true))
+"""
+
+# ╔═╡ f02d9156-04b3-4e2a-85e0-2fd6612471de
+begin
+	rng_sim = MersenneTwister(42)
+	xbar = map(1:n_iter) do var
+		x_sim = randn(rng_sim, n_sim)
+		y_sim = randn(rng_sim, n_sim) .+ d_sim
+		test_sim = OneSampleTTest(x_sim, y_sim)
+		return test_sim.xbar
+	end
+	
+	#sort!(xbar)
+	#tail = round(Int, 0.975 * n_iter)
+	
+	let f = Figure(), ax = Axis(f[1, 1])
+		#colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
+	 	density!(ax, xbar)#; color=colors[1])	
+		#vlines!(ax, xbar[tail])
+	 	ax.title[] = "Estimate difference across $(n_iter) replications, Type S rate: $(round(mean(>(d_sim), xbar); sigdigits=3)*100)%"
+	 	f
+	 end
+	
+end
+
+# ╔═╡ c28337fb-464b-4d2f-a8ea-9e1dd7ebd41d
+# HTML("<style> main { max-width:1000px; } </style> ")
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -200,12 +470,16 @@ PLUTO_PROJECT_TOML_CONTENTS = """
 AlgebraOfGraphics = "cbdf2221-f076-402e-a563-3d30da359d67"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 HypothesisTests = "09f84164-cd44-5f33-b23f-e6b0d136a0d5"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 
 [compat]
 AlgebraOfGraphics = "~0.5.3"
 CairoMakie = "~0.6.5"
 HypothesisTests = "~0.10.4"
+PlutoUI = "~0.7.9"
+StatsBase = "~0.33.10"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -936,6 +1210,12 @@ git-tree-sha1 = "9ff1c70190c1c30aebca35dc489f7411b256cd23"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.0.13"
 
+[[PlutoUI]]
+deps = ["Base64", "Dates", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "Suppressor"]
+git-tree-sha1 = "44e225d5837e2a2345e69a1d1e01ac2443ff9fcb"
+uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+version = "0.7.9"
+
 [[PolygonOps]]
 git-tree-sha1 = "c031d2332c9a8e1c90eca239385815dc271abb22"
 uuid = "647866c9-e3ac-4575-94e7-e3d426903924"
@@ -1141,6 +1421,11 @@ version = "0.6.1"
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 
+[[Suppressor]]
+git-tree-sha1 = "a819d77f31f83e5792a76081eee1ea6342ab8787"
+uuid = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
+version = "0.2.0"
+
 [[TOML]]
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
@@ -1306,25 +1591,51 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─6d4debdf-9099-47f2-bc2a-abfa35098aba
+# ╠═6d4debdf-9099-47f2-bc2a-abfa35098aba
+# ╠═965a5db0-e1bb-48ad-963f-4335c3d3cb86
+# ╟─c732429c-c25c-47a9-b1d9-2b4535c49dfe
 # ╟─0989bb85-e5d7-48dc-a489-845d2164288e
 # ╟─ab25f659-c319-4a80-b1a6-6c0ec16959e1
 # ╟─1bd18ced-9f9f-495d-8fed-afd3bced0a71
 # ╟─58de8fa1-7024-4438-8abf-3731e39f0c2e
 # ╟─9f1fc007-b3b3-4bdc-9aa9-193a11182296
-# ╠═51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
-# ╠═965a5db0-e1bb-48ad-963f-4335c3d3cb86
-# ╟─c732429c-c25c-47a9-b1d9-2b4535c49dfe
+# ╟─4c878250-daa9-4b01-a0ec-fc96cd430ace
+# ╟─045b7a84-ae00-4b62-965f-533244372023
+# ╟─dd2ef900-88dc-42cb-807f-f412cf70c73e
+# ╟─cb17bdbc-0905-4b3f-8765-57beb964904d
+# ╟─305154c9-8e76-4789-b193-aed0af0e96e9
+# ╟─122cf668-4b3b-4e75-9c53-6a8f70f45059
+# ╟─24c2cafa-d7f9-4a93-a964-265a373b43ba
+# ╟─293ec083-f05e-4cc8-9597-6742dee4afee
+# ╟─59c61df8-6e0e-4734-9da4-f2edc49535c6
 # ╟─c8d96e96-4b76-4192-9a66-6c1fca243bac
-# ╠═f02d9156-04b3-4e2a-85e0-2fd6612471de
-# ╠═9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
+# ╟─9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
+# ╟─4febe8bf-24f2-4717-927c-ec8793a8981c
+# ╟─ecca8530-3f8d-41c1-ad70-f872a947da4b
+# ╟─f09fd24a-83d0-4acd-b749-a06a27743c71
+# ╟─068b5e76-4a38-4f85-a23b-88ea78b06e30
+# ╟─bcdbf594-82b0-4045-837f-e46f1c729a05
+# ╟─ffc4449d-8560-4489-b3d8-c0e8ac4f324c
+# ╟─7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
+# ╟─2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
+# ╟─51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
+# ╟─232cf949-c5d5-462e-b26e-f37eb2a7cfdd
+# ╟─10f21faa-1305-4011-8f88-e15d4c4937a7
+# ╟─7791cef0-6dd1-4655-be02-16568c4222a6
+# ╠═3d48c445-6e4f-4319-976e-998d41271d77
+# ╠═d705232d-81ef-4788-9a22-34b7e874bd10
 # ╠═82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
 # ╟─1edd814d-4819-4427-98ad-2b74bb4326c8
 # ╟─de18cd52-b588-4912-902c-3a150bfc5111
-# ╟─ecca8530-3f8d-41c1-ad70-f872a947da4b
-# ╟─f09fd24a-83d0-4acd-b749-a06a27743c71
-# ╠═068b5e76-4a38-4f85-a23b-88ea78b06e30
-# ╠═ffc4449d-8560-4489-b3d8-c0e8ac4f324c
-# ╠═3cdfff8d-5697-4b42-86f3-c1d363488f5d
+# ╟─ae1e9c20-770d-4bfa-9a26-12f7416ad7b0
+# ╟─3cdfff8d-5697-4b42-86f3-c1d363488f5d
+# ╟─2d6ca834-ed21-4325-94ec-e27f6bbb4b47
+# ╟─bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
+# ╟─0b5f8993-ed57-4d92-8f30-615178fca812
+# ╟─984577f6-0401-4b17-9553-75aebd2c4bb2
+# ╟─af748a0d-af77-415c-8e03-37bab85e7e92
+# ╟─cce37f9f-d097-46d5-ab5c-9f27f8911cea
+# ╟─f02d9156-04b3-4e2a-85e0-2fd6612471de
+# ╟─c28337fb-464b-4d2f-a8ea-9e1dd7ebd41d
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
