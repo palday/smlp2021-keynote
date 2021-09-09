@@ -60,6 +60,17 @@ html"""
 md"""Vic, you not washing your hands behind closed doors is making the entire community sick....
 """
 
+# ╔═╡ c14b3061-bb24-4e5e-ba13-88163d6e1844
+md"""
+
+## Hold my beer
+
+![](https://imgs.xkcd.com/comics/duty_calls.png)
+
+*Image credit: XKCD*
+
+"""
+
 # ╔═╡ 9f1fc007-b3b3-4bdc-9aa9-193a11182296
 md"""
 
@@ -188,6 +199,36 @@ md"""
   > because only naughty brewers take n so small that the difference is not of the order of the probable error! 
 """
 
+# ╔═╡ 4febe8bf-24f2-4717-927c-ec8793a8981c
+md"""
+
+# The Present-ish 
+
+"""
+
+# ╔═╡ 89f830ed-a329-43de-9127-f5757e688f14
+md"""
+
+## Meet Sam the Psych Grad Student
+
+![](https://upload.wikimedia.org/wikipedia/commons/d/d5/Rubber_duck_assisting_with_debugging.jpg)
+
+*Image credit: Wikipedia*
+
+- Sam learns that it's import to be empirical
+- Sam collects data, computes means.
+- The means differ! 
+- Sam has heard that sometimes differences aren't meaningful.
+- Sam's supervisor says: compute some statistics and find out if the differences are *significant*.
+"""
+
+# ╔═╡ 4fd67b5f-954b-4637-bb77-5dbee364fc14
+md"""
+
+## Super significant! 😄 → 😎 → ✔ 📰
+
+"""
+
 # ╔═╡ c8d96e96-4b76-4192-9a66-6c1fca243bac
 let f = Figure(), ax = Axis(f[1, 1])
 	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
@@ -197,10 +238,76 @@ let f = Figure(), ax = Axis(f[1, 1])
 	f
 end
 
-# ╔═╡ 4febe8bf-24f2-4717-927c-ec8793a8981c
+# ╔═╡ 8f8591f7-2d77-40bf-9013-5349274d267d
 md"""
 
-# The Present-ish 
+## Not significant. 😦 → 😢 → 🚫 📰
+
+"""
+
+# ╔═╡ 0ad512d8-227c-44e7-b3c2-8d0d27b123b4
+md"""
+
+## Sam is now so certain about uncertainty.
+
+
+- This is a learned behavior.
+- Sam understands that uncertainty and randomness are things that can fool the scientist.
+- Sam understands that you decide whether you have enough certainty by performing the sacred rituals and looking at the stars. 🌠🔭
+- Sam thinks some smart person has figured this out and so Sam doesn't have to bother.
+
+- It's Sam the Scientist and not Sam the Statistician after all.
+"""
+
+# ╔═╡ 6a7b716e-ffa1-4725-b174-2b9b00342fcc
+md"""
+
+
+## But what are all these rituals actually doing? 
+
+- Somewhere they encode a model of the data and the uncertainty.
+- Where did this model go?
+- Where did the uncertainty go?
+- Where did all the other characteristics go besides the mean?
+- Where did the fun go?
+"""
+
+# ╔═╡ c09cd562-30ac-418a-b047-d9687d665b4a
+md"""
+
+## The Statistical Cargo Cult and the Dance of the $p$-Values
+
+> I think the educational and psychological studies I mentioned are examples of what I would like to call cargo cult science. In the South Seas there is a cargo cult of people. During the war they saw airplanes land with lots of good materials, and they want the same thing to happen now. So they've arranged to make things like runways, to put fires along the sides of the runways, to make a wooden hut for a man to sit in, with two wooden pieces on his head like headphones and bars of bamboo sticking out like antennas-- he's the controller--and they wait for the airplanes to land. They're doing everything right. The form is perfect. It looks exactly the way it looked before. But it doesn't work. No airplanes land. So I call these things cargo cult science, because they follow all the apparent precepts and forms of scientific investigation, but they're missing something essential, because the planes don't land.
+
+*Feynman (1985, adapted from a commencement address in 1974)*
+
+The planes landed in the good old ANOVA times, but the old gestures don't work and the new gestures (keep it maximal) don't either.
+"""
+
+# ╔═╡ ffc4449d-8560-4489-b3d8-c0e8ac4f324c
+md"""
+
+## What has actually changed in the last 10-20 years?
+
+- Computers became fast and readily available.
+- Software for many of these methods became freely available and comparatively usable.
+- Following the availability of this computational infrastructure, the expectation arose to actually use it.
+- We gained access to powerful tools that Clark and Cohen could only dream of, but then complained that the it took too much skill to operate a lathe and that we should go back to wittling with pocket knives.
+- We somehow became even more attached to rituals.
+"""
+
+# ╔═╡ 2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
+md""" 
+
+## Meta-Science and the Replication Crisis
+
+We discovered just how poorly we understood and hence practiced experimental design and control: 
+  - multiple comparisons
+  - optional stoppping
+  - circular analysis
+  - researcher degrees of freedom (Simmons et al. 2011), "garden of forking paths" (Gelman and Loken 2013)
+  - paradoxes of power (cf. Type-S & Type-M error Gelman and Carlin 2014)
+  - general reporting (if you're using ANOVA, do you always report if you're using Type-1/2/3 ?)
 
 """
 
@@ -243,37 +350,11 @@ md"""
 - *Exploratory Data Analysis*, including boxplot (Tukey 1977)
 """
 
-# ╔═╡ ffc4449d-8560-4489-b3d8-c0e8ac4f324c
-md"""
-
-## What has actually changed in the last 10-20 years?
-
-- Computers became fast and readily available.
-- Software for many of these methods became freely available and comparatively usable.
-- Following the availability of this computational infrastructure, the expectation arose to actually use it.
-- We gained access to powerful tools that Clark and Cohen could only dream of, but then complained that the it took too much skill to operate a lathe and that we should go back to wittling with pocket knives.
-"""
-
 # ╔═╡ 7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
 md"""
 > The tool that is so dull that you cannot cut yourself on it is not likely to be sharp enough to be either useful or helpful. 
 
 -- *John Tukey*
-"""
-
-# ╔═╡ 2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
-md""" 
-
-## Meta-Science and the Replication Crisis
-
-We discoverd just how poorly we understood and hence practiced experimental design and control: 
-  - multiple comparisons
-  - optional stoppping
-  - circular analysis
-  - researcher degrees of freedom (Simmons et al. 2011), "garden of forking paths" (Gelman and Loken 2013)
-  - paradoxes of power (cf. Type-S & Type-M error Gelman and Carlin 2014)
-  - general reporting (if you're using ANOVA, do you always report if you're using Type-1/2/3 ?)
-
 """
 
 # ╔═╡ 51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
@@ -284,8 +365,41 @@ md"""
 This has always been hard and we've been messing it up from the beginning, even things that feel like push-button procedures (e.g. ANOVA).
 """
 
+# ╔═╡ 596e1cfb-e861-4301-a08e-4bb3aae3f923
+md"""
+
+## Sometimes "soft science" is the hardest science
+
+- Humans are complex entities with lots of hidden, unobservable state.
+- So we'll never achieve the type of experimental control of the physical sciences.
+- But even those sciences use advanced methods to handle their data and collect a *lot* of data.
+- We have to be experts at both traditional "humanities" and traditional "science".
+- But we're still a *science*, which means we need to deal with data and uncertainty. 
+- We also need to be explicit about the models we're using and think very hard about whether these models are valid.
+
+*Thanks to Sanjay Srivastava for the pun*
+
+"""
+
+# ╔═╡ 5f9d385d-e72e-4491-8a41-be6536e823e8
+md"""
+
+## Statistics and science are about both models
+
+- Paraphrasing Box: No theory is perfect, but only some are useful.
+- Theories that don't take into account real-world uncertainty and variability aren't going to be particulary useful.
+- Using a default model -- ANOVA, "keep it maximal" -- is like making "one size fits all" clothing and never checking whether it actually fits.
+"""
+
+# ╔═╡ bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
+md"""
+## Cargo Cult Statistics is Still Cargo Cult Science
+
+
+![Poorly Drawn Lines "Start Trying"](https://secureservercdn.net/192.169.220.85/hk8.901.myftpupload.com/wp-content/uploads/2021/05/start-trying_web.png)"""
+
 # ╔═╡ 232cf949-c5d5-462e-b26e-f37eb2a7cfdd
-md"""## Cohen warned you about this in the 1960s...."""
+ md"""## Cohen warned you about this in the 1960s...."""
 
 # ╔═╡ 10f21faa-1305-4011-8f88-e15d4c4937a7
 html"""
@@ -304,13 +418,28 @@ md"""
 ## Measure twice, cut once
 
 - Your analysis plan is part of your experimental plan.
-- Use simulation 
+- Use simulation to think about and reason about data and analysis *before collecting real data*
+- Conduct pilots to get an idea about real-world error
+- Rinse, lather, repeat.
 - Don't depend on defaults.
 
 """
 
 # ╔═╡ d705232d-81ef-4788-9a22-34b7e874bd10
+md"""
 
+## Show the sim example, ya dummy
+
+Then the video
+
+"""
+
+# ╔═╡ 76747c73-8082-40ba-93b1-1ef9746cdfb8
+md"""
+
+# The Future (is now)
+
+"""
 
 # ╔═╡ 82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
 md"""
@@ -336,7 +465,7 @@ md"""
   - exact methods to approximate problems
   - approximate solutions to exact problems
 - Direct vs. iterative methods
-- Bayes Theorem (not just for Bayesians!)
+- Bayes Theorem (not just for Bayesians!) and the challenges of conditional vs. marginal probability
 - Frequentist and Bayesian conceptions of probability 
 - What/why are "models" and living with uncertainty
 """
@@ -360,10 +489,37 @@ md"""## This summer school shows the prime facie fallacy of this claim."""
 # ╔═╡ 3cdfff8d-5697-4b42-86f3-c1d363488f5d
 html"""<blockquote class="twitter-tweet" data-lang="en" data-dnt="true"><p lang="en" dir="ltr">And dividing and conquering, bringing statisticians onto our papers in author roles raises problems. There aren’t enough statisticians to serve as authors *and reviewers* on all our papers. And it’s limiting for the statisticians themselves, as they spend less time in lead roles.</p>&mdash; Victor Ferreira (@victorf13) <a href="https://twitter.com/victorf13/status/1341391146669363200?ref_src=twsrc%5Etfw">December 22, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>"""
 
+# ╔═╡ 3ed12f62-ad25-4ce5-abdf-3713ece0bae0
+md"""
+
+## Don't speak for the group you patronize and paternalize
+
+- Not everybody wants to be in a lead role (support staff scientists! research support staff!)
+- "Real" statisticians aren't necessarily motivated by the same desires as cognitive scientists.
+- "Real" statisticians may not have to check the same boxes for career advanced.
+- What do you think statisticians do if not analyze data and develop tools for doing so?
+- For methods people, working with real data and real users is something we need to do things well!
+"""
+
+# ╔═╡ 757a331c-7f53-4b4a-a106-579daa517fcd
+md"""
+## My Advice: Always be a Student
+"""
+
+# ╔═╡ d2a11f29-99ef-458d-811d-9b27893b73d5
+md"""
+
+Student was:
+
+- concerned with *error*/*uncertainty* and not *significance*
+- noticed when the tools of the day were insufficient
+- developed new tools instead of just blindly using the easiest existing tool
+- despite not being particularly good at math
+- not afraid to collaborate when he needed help
+"""
+
 # ╔═╡ 2d6ca834-ed21-4325-94ec-e27f6bbb4b47
 md"""
-## Always a Student
-
 > Dear Fisher
 > 
 > [...]
@@ -386,15 +542,13 @@ md"""
 following Boland (1984)
 """
 
-# ╔═╡ bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
-md"""![Poorly Drawn Lines "Start Trying"](https://secureservercdn.net/192.169.220.85/hk8.901.myftpupload.com/wp-content/uploads/2021/05/start-trying_web.png)"""
-
 # ╔═╡ 0b5f8993-ed57-4d92-8f30-615178fca812
 md"""
 
 ## Embrace uncertainty
 
-### Why would expect certain, deterministic rules from the study of uncertainty and non determism?
+!!! think
+	Why would expect certain, unchanging rules from the study of uncertainty and variability?
 
 """
 
@@ -409,6 +563,11 @@ And special thanks to:
 - Center for Interdisciplinary Discipline (ZiF), Bielefeld for financial support
 - Reinhold Kliegl, Doug Bates and Benedikt Ehinger for long discussions on statistics and mixed models
 - Alannah Jones for the inspiration for the title (and being a great student)
+"""
+
+# ╔═╡ fbc69881-7042-4bd1-b364-1806841d73f0
+md"""
+# Fin*
 """
 
 # ╔═╡ af748a0d-af77-415c-8e03-37bab85e7e92
@@ -591,15 +750,15 @@ version = "3.14.0"
 
 [[ColorTypes]]
 deps = ["FixedPointNumbers", "Random"]
-git-tree-sha1 = "32a2b8af383f11cbb65803883837a149d10dfe8a"
+git-tree-sha1 = "024fe24d83e4a5bf5fc80501a314ce0d1aa35597"
 uuid = "3da002f7-5984-5a60-b8a6-cbb66c0b333f"
-version = "0.10.12"
+version = "0.11.0"
 
 [[ColorVectorSpace]]
-deps = ["ColorTypes", "Colors", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "StatsBase"]
-git-tree-sha1 = "4d17724e99f357bfd32afa0a9e2dda2af31a9aea"
+deps = ["ColorTypes", "FixedPointNumbers", "LinearAlgebra", "SpecialFunctions", "Statistics", "TensorCore"]
+git-tree-sha1 = "42a9b08d3f2f951c9b283ea427d96ed9f1f30343"
 uuid = "c3611d14-8923-5661-9e6a-0046d554d3a4"
-version = "0.8.7"
+version = "0.9.5"
 
 [[Colors]]
 deps = ["ColorTypes", "FixedPointNumbers", "Reexport"]
@@ -675,9 +834,9 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
 deps = ["ChainRulesCore", "FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
-git-tree-sha1 = "f4efaa4b5157e0cdb8283ae0b5428bc9208436ed"
+git-tree-sha1 = "c2dbc7e0495c3f956e4615b78d03c7aa10091d0c"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.25.16"
+version = "0.25.15"
 
 [[DocStringExtensions]]
 deps = ["LibGit2"]
@@ -691,9 +850,9 @@ uuid = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 
 [[EarCut_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
-git-tree-sha1 = "3f3a2501fa7236e9b911e0f7a588c657e822bb6d"
+git-tree-sha1 = "92d8f9f208637e8d2d28c664051a00569c01493d"
 uuid = "5ae413db-bbd1-5e63-b57d-d24a61df00f5"
-version = "2.2.3+0"
+version = "2.1.5+1"
 
 [[EllipsisNotation]]
 deps = ["ArrayInterface"]
@@ -739,9 +898,9 @@ version = "1.11.0"
 
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays", "Statistics"]
-git-tree-sha1 = "a3b7b041753094f3b17ffa9d2e2e07d8cace09cd"
+git-tree-sha1 = "7c365bdef6380b29cfc5caaf99688cd7489f9b87"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.12.3"
+version = "0.12.2"
 
 [[FixedPointNumbers]]
 deps = ["Statistics"]
@@ -860,21 +1019,32 @@ uuid = "615f187c-cbe4-4ef1-ba3b-2fcf58d6d173"
 version = "0.1.0"
 
 [[ImageCore]]
-deps = ["AbstractFFTs", "Colors", "FixedPointNumbers", "Graphics", "MappedArrays", "MosaicViews", "OffsetArrays", "PaddedViews", "Reexport"]
-git-tree-sha1 = "db645f20b59f060d8cfae696bc9538d13fd86416"
+deps = ["AbstractFFTs", "ColorVectorSpace", "Colors", "FixedPointNumbers", "Graphics", "MappedArrays", "MosaicViews", "OffsetArrays", "PaddedViews", "Reexport"]
+git-tree-sha1 = "595155739d361589b3d074386f77c107a8ada6f7"
 uuid = "a09fc81d-aa75-5fe9-8630-4744c3626534"
-version = "0.8.22"
+version = "0.9.2"
 
 [[ImageIO]]
-deps = ["FileIO", "Netpbm", "PNGFiles"]
-git-tree-sha1 = "0d6d09c28d67611c68e25af0c2df7269c82b73c7"
+deps = ["FileIO", "Netpbm", "OpenEXR", "PNGFiles", "TiffImages", "UUIDs"]
+git-tree-sha1 = "13c826abd23931d909e4c5538643d9691f62a617"
 uuid = "82e4d734-157c-48bb-816b-45c225c6df19"
-version = "0.4.1"
+version = "0.5.8"
+
+[[Imath_jll]]
+deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
+git-tree-sha1 = "87f7662e03a649cffa2e05bf19c303e168732d3e"
+uuid = "905a6f67-0a94-5f89-b386-d35d92009cd1"
+version = "3.1.2+0"
 
 [[IndirectArrays]]
-git-tree-sha1 = "012e604e1c7458645cb8b436f8fba789a51b257f"
+git-tree-sha1 = "c2a145a145dc03a7620af1444e0264ef907bd44f"
 uuid = "9b13fd28-a010-5f03-acff-a1bbcff69959"
-version = "1.0.0"
+version = "0.5.1"
+
+[[Inflate]]
+git-tree-sha1 = "f5fc07d4e706b84f72d54eedcc1c13d92fb0871c"
+uuid = "d25df0c9-e2be-5dd7-82c8-3ad0b3e990b9"
+version = "0.1.2"
 
 [[IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1104,10 +1274,10 @@ uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "0.3.5"
 
 [[Netpbm]]
-deps = ["ColorVectorSpace", "FileIO", "ImageCore"]
-git-tree-sha1 = "09589171688f0039f13ebe0fdcc7288f50228b52"
+deps = ["FileIO", "ImageCore"]
+git-tree-sha1 = "18efc06f6ec36a8b801b23f076e3c6ac7c3bf153"
 uuid = "f09324ee-3d7c-5217-9330-fc30815ba969"
-version = "1.0.1"
+version = "1.0.2"
 
 [[NetworkOptions]]
 uuid = "ca575930-c2e3-43a9-ace4-1e988b2c1908"
@@ -1128,6 +1298,18 @@ deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
 git-tree-sha1 = "7937eda4681660b4d6aeeecc2f7e1c81c8ee4e2f"
 uuid = "e7412a2a-1a6e-54c0-be00-318e2571c051"
 version = "1.3.5+0"
+
+[[OpenEXR]]
+deps = ["Colors", "FileIO", "OpenEXR_jll"]
+git-tree-sha1 = "327f53360fdb54df7ecd01e96ef1983536d1e633"
+uuid = "52e1d378-f018-4a11-a4be-720524705ac7"
+version = "0.3.2"
+
+[[OpenEXR_jll]]
+deps = ["Artifacts", "Imath_jll", "JLLWrappers", "Libdl", "Pkg", "Zlib_jll"]
+git-tree-sha1 = "923319661e9a22712f24596ce81c54fc0366f304"
+uuid = "18a262bb-aa17-5467-a713-aee519bc75cb"
+version = "3.1.1+0"
 
 [[OpenSSL_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg"]
@@ -1166,9 +1348,9 @@ version = "0.11.1"
 
 [[PNGFiles]]
 deps = ["Base64", "CEnum", "ImageCore", "IndirectArrays", "OffsetArrays", "libpng_jll"]
-git-tree-sha1 = "e14c485f6beee0c7a8dcf6128bf70b85f1fe201e"
+git-tree-sha1 = "520e28d4026d16dcf7b8c8140a3041f0e20a9ca8"
 uuid = "f57f5aa1-a3ce-4bc8-8ab9-96f992907883"
-version = "0.3.9"
+version = "0.3.7"
 
 [[Packing]]
 deps = ["GeometryBasics"]
@@ -1204,6 +1386,12 @@ version = "0.40.1+0"
 deps = ["Artifacts", "Dates", "Downloads", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
+[[PkgVersion]]
+deps = ["Pkg"]
+git-tree-sha1 = "a7a7e1a88853564e551e4eba8650f8c38df79b37"
+uuid = "eebad327-c553-4316-9ea0-9fa01ccd7688"
+version = "0.1.1"
+
 [[PlotUtils]]
 deps = ["ColorSchemes", "Colors", "Dates", "Printf", "Random", "Reexport", "Statistics"]
 git-tree-sha1 = "9ff1c70190c1c30aebca35dc489f7411b256cd23"
@@ -1223,9 +1411,9 @@ version = "0.1.1"
 
 [[PooledArrays]]
 deps = ["DataAPI", "Future"]
-git-tree-sha1 = "a193d6ad9c45ada72c14b731a318bedd3c2f00cf"
+git-tree-sha1 = "cde4ce9d6f33219465b55162811d8de8139c0414"
 uuid = "2dfb63ee-cc39-5dd5-95bd-886bf059d720"
-version = "1.3.0"
+version = "1.2.1"
 
 [[Preferences]]
 deps = ["TOML"]
@@ -1236,6 +1424,12 @@ version = "1.2.2"
 [[Printf]]
 deps = ["Unicode"]
 uuid = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[[ProgressMeter]]
+deps = ["Distributed", "Printf"]
+git-tree-sha1 = "afadeba63d90ff223a6a48d2009434ecee2ec9e8"
+uuid = "92933f4c-e287-5a05-a399-4b506db050ca"
+version = "1.7.1"
 
 [[QuadGK]]
 deps = ["DataStructures", "LinearAlgebra"]
@@ -1446,9 +1640,21 @@ version = "1.5.0"
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
 
+[[TensorCore]]
+deps = ["LinearAlgebra"]
+git-tree-sha1 = "1feb45f88d133a655e001435632f019a9a1bcdb6"
+uuid = "62fd8b95-f654-4bbd-a8a5-9c27f68ccd50"
+version = "0.1.1"
+
 [[Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
 uuid = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[[TiffImages]]
+deps = ["ColorTypes", "DocStringExtensions", "FileIO", "FixedPointNumbers", "IndirectArrays", "Inflate", "OffsetArrays", "OrderedCollections", "PkgVersion", "ProgressMeter"]
+git-tree-sha1 = "03fb246ac6e6b7cb7abac3b3302447d55b43270e"
+uuid = "731e570b-9d59-4bfa-96dc-6df516fadf69"
+version = "0.4.1"
 
 [[TranscodingStreams]]
 deps = ["Random", "Test"]
@@ -1591,13 +1797,14 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═6d4debdf-9099-47f2-bc2a-abfa35098aba
-# ╠═965a5db0-e1bb-48ad-963f-4335c3d3cb86
+# ╟─6d4debdf-9099-47f2-bc2a-abfa35098aba
+# ╟─965a5db0-e1bb-48ad-963f-4335c3d3cb86
 # ╟─c732429c-c25c-47a9-b1d9-2b4535c49dfe
 # ╟─0989bb85-e5d7-48dc-a489-845d2164288e
 # ╟─ab25f659-c319-4a80-b1a6-6c0ec16959e1
 # ╟─1bd18ced-9f9f-495d-8fed-afd3bced0a71
 # ╟─58de8fa1-7024-4438-8abf-3731e39f0c2e
+# ╟─c14b3061-bb24-4e5e-ba13-88163d6e1844
 # ╟─9f1fc007-b3b3-4bdc-9aa9-193a11182296
 # ╟─4c878250-daa9-4b01-a0ec-fc96cd430ace
 # ╟─045b7a84-ae00-4b62-965f-533244372023
@@ -1608,31 +1815,44 @@ version = "3.5.0+0"
 # ╟─24c2cafa-d7f9-4a93-a964-265a373b43ba
 # ╟─293ec083-f05e-4cc8-9597-6742dee4afee
 # ╟─59c61df8-6e0e-4734-9da4-f2edc49535c6
-# ╟─c8d96e96-4b76-4192-9a66-6c1fca243bac
-# ╟─9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
 # ╟─4febe8bf-24f2-4717-927c-ec8793a8981c
+# ╟─89f830ed-a329-43de-9127-f5757e688f14
+# ╟─4fd67b5f-954b-4637-bb77-5dbee364fc14
+# ╟─c8d96e96-4b76-4192-9a66-6c1fca243bac
+# ╟─8f8591f7-2d77-40bf-9013-5349274d267d
+# ╟─9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
+# ╟─0ad512d8-227c-44e7-b3c2-8d0d27b123b4
+# ╟─6a7b716e-ffa1-4725-b174-2b9b00342fcc
+# ╟─c09cd562-30ac-418a-b047-d9687d665b4a
+# ╟─ffc4449d-8560-4489-b3d8-c0e8ac4f324c
+# ╟─2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
 # ╟─ecca8530-3f8d-41c1-ad70-f872a947da4b
 # ╟─f09fd24a-83d0-4acd-b749-a06a27743c71
 # ╟─068b5e76-4a38-4f85-a23b-88ea78b06e30
 # ╟─bcdbf594-82b0-4045-837f-e46f1c729a05
-# ╟─ffc4449d-8560-4489-b3d8-c0e8ac4f324c
 # ╟─7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
-# ╟─2a3dfba2-0ee6-4e89-85fe-15eae6cbabf0
 # ╟─51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
+# ╟─596e1cfb-e861-4301-a08e-4bb3aae3f923
+# ╟─5f9d385d-e72e-4491-8a41-be6536e823e8
+# ╟─bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
 # ╟─232cf949-c5d5-462e-b26e-f37eb2a7cfdd
 # ╟─10f21faa-1305-4011-8f88-e15d4c4937a7
 # ╟─7791cef0-6dd1-4655-be02-16568c4222a6
-# ╠═3d48c445-6e4f-4319-976e-998d41271d77
-# ╠═d705232d-81ef-4788-9a22-34b7e874bd10
-# ╠═82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
+# ╟─3d48c445-6e4f-4319-976e-998d41271d77
+# ╟─d705232d-81ef-4788-9a22-34b7e874bd10
+# ╟─76747c73-8082-40ba-93b1-1ef9746cdfb8
+# ╟─82e32146-4140-4b17-b8a5-cf7cd8f6f3f9
 # ╟─1edd814d-4819-4427-98ad-2b74bb4326c8
 # ╟─de18cd52-b588-4912-902c-3a150bfc5111
 # ╟─ae1e9c20-770d-4bfa-9a26-12f7416ad7b0
 # ╟─3cdfff8d-5697-4b42-86f3-c1d363488f5d
+# ╟─3ed12f62-ad25-4ce5-abdf-3713ece0bae0
+# ╟─757a331c-7f53-4b4a-a106-579daa517fcd
+# ╟─d2a11f29-99ef-458d-811d-9b27893b73d5
 # ╟─2d6ca834-ed21-4325-94ec-e27f6bbb4b47
-# ╟─bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
 # ╟─0b5f8993-ed57-4d92-8f30-615178fca812
 # ╟─984577f6-0401-4b17-9553-75aebd2c4bb2
+# ╟─fbc69881-7042-4bd1-b364-1806841d73f0
 # ╟─af748a0d-af77-415c-8e03-37bab85e7e92
 # ╟─cce37f9f-d097-46d5-ab5c-9f27f8911cea
 # ╟─f02d9156-04b3-4e2a-85e0-2fd6612471de
