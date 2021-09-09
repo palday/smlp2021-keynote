@@ -120,13 +120,9 @@ md"""
 3. Compare it to the reference distribution
   - Old way: use a table and find out what your $p$-value is less than
   - New way: have the computer figure out a precise value
-"""
 
-# ╔═╡ cb17bdbc-0905-4b3f-8765-57beb964904d
-md"""
-##
-
-But Student's paper came out about 20 years before Fisher and the rest developed the notion of statistical significance.
+!!! note
+	But Student's paper came out about 20 years before Fisher and the rest developed the notion of statistical significance.
 """
 
 # ╔═╡ 305154c9-8e76-4789-b193-aed0af0e96e9
@@ -215,7 +211,9 @@ md"""
 
 *Image credit: Wikipedia*
 
-- Sam learns that it's import to be empirical
+## Sam starts a study
+
+- Sam learns that it's important to be empirical
 - Sam collects data, computes means.
 - The means differ! 
 - Sam has heard that sometimes differences aren't meaningful.
@@ -244,6 +242,27 @@ md"""
 ## Not significant. 😦 → 😢 → 🚫 📰
 
 """
+
+# ╔═╡ 19a04cb9-146b-4131-9221-c613ed3d7704
+md"""
+
+## Not significant. 😦 → 😢 → 🚫 📰
+
+"""
+
+# ╔═╡ fc89a836-28ba-40fa-ab91-b53503899189
+let f = Figure(), ax = Axis(f[1, 1]), n = 20, d=1,
+	rng = MersenneTwister(42),
+	σ₁ = 3, σ₂ = 1,
+	a = σ₁ * randn(rng, n),
+	b = σ₂ * randn(rng, n) .+ d,
+	test = OneSampleTTest(a, b)
+	colors = Makie.cgrad(:Dark2_3, 2; categorical=true,alpha=0.8)
+	density!(ax, a; label="a", color=colors[1])	
+	density!(ax, b; label="b", color=colors[2])
+	ax.title[] = "Within-subjects, n=$(n) and Δμ=$(d), σ₁=$(σ₁), σ₂=$(σ₂), p = $(PValue(pvalue(test)))"
+	f
+end
 
 # ╔═╡ 0ad512d8-227c-44e7-b3c2-8d0d27b123b4
 md"""
@@ -306,7 +325,7 @@ We discovered just how poorly we understood and hence practiced experimental des
   - optional stoppping
   - circular analysis
   - researcher degrees of freedom (Simmons et al. 2011), "garden of forking paths" (Gelman and Loken 2013)
-  - paradoxes of power (cf. Type-S & Type-M error Gelman and Carlin 2014)
+  - paradoxes of power (cf. Gelman and Carlin 2014)
   - general reporting (if you're using ANOVA, do you always report if you're using Type-1/2/3 ?)
 
 """
@@ -335,7 +354,7 @@ md"""
 - power analysis and effect sizes: (Cohen 1962, 1969, 1988, 1990, 1994, ....)
 - Simpson's paradox (Simpson 1951, potentially Pearson around 1900)
 - Meehl's Paradox (1967)
-- Cross-validation (early 1970s)
+- cross-validation (early 1970s)
 - early robust statistics (Wilcoxon 1945, Mann-Whitney 1947, etc.)
 """
 
@@ -348,13 +367,6 @@ md"""
 - modern robust methods (e.g. Huber 1981)
 - resampling methods: jackknife (Tukey 1958, Jaeckel 1972), bootstrap (Efron 1979)
 - *Exploratory Data Analysis*, including boxplot (Tukey 1977)
-"""
-
-# ╔═╡ 7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
-md"""
-> The tool that is so dull that you cannot cut yourself on it is not likely to be sharp enough to be either useful or helpful. 
-
--- *John Tukey*
 """
 
 # ╔═╡ 51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
@@ -379,6 +391,13 @@ md"""
 
 *Thanks to Sanjay Srivastava for the pun*
 
+"""
+
+# ╔═╡ 7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
+md"""
+> The tool that is so dull that you cannot cut yourself on it is not likely to be sharp enough to be either useful or helpful. 
+
+-- *John Tukey*
 """
 
 # ╔═╡ 5f9d385d-e72e-4491-8a41-be6536e823e8
@@ -420,8 +439,8 @@ md"""
 - Your analysis plan is part of your experimental plan.
 - Use simulation to think about and reason about data and analysis *before collecting real data*
 - Conduct pilots to get an idea about real-world error
-- Rinse, lather, repeat.
-- Don't depend on defaults.
+- Rinse, lather, repeat
+- Don't depend on defaults
 
 """
 
@@ -496,9 +515,9 @@ md"""
 
 - Not everybody wants to be in a lead role (support staff scientists! research support staff!)
 - "Real" statisticians aren't necessarily motivated by the same desires as cognitive scientists.
-- "Real" statisticians may not have to check the same boxes for career advanced.
+- "Real" statisticians may not have to check the same boxes for career advancement.
 - What do you think statisticians do if not analyze data and develop tools for doing so?
-- For methods people, working with real data and real users is something we need to do things well!
+- For methods people, working with real data and real users is something we need to do in order to do things well!
 """
 
 # ╔═╡ 757a331c-7f53-4b4a-a106-579daa517fcd
@@ -559,9 +578,10 @@ md"""
 
 And special thanks to:
 
-- The SMLP organizers
-- Center for Interdisciplinary Discipline (ZiF), Bielefeld for financial support
-- Reinhold Kliegl, Doug Bates and Benedikt Ehinger for long discussions on statistics and mixed models
+- The SMLP organizers and students
+- Center for Interdisciplinary Research (ZiF), Bielefeld for financial support
+- Doug Bates, Christina Bergmann, Laurel Brehm, Benedikt Ehinger, Franziska Kretzschmar, Reinhold Kliegl and Jeroen van Paridon for long discussions on statistics (education) and mixed models
+- Ina Bornkessel-Schlesewsky for embracing methodological work
 - Alannah Jones for the inspiration for the title (and being a great student)
 """
 
@@ -1809,7 +1829,6 @@ version = "3.5.0+0"
 # ╟─4c878250-daa9-4b01-a0ec-fc96cd430ace
 # ╟─045b7a84-ae00-4b62-965f-533244372023
 # ╟─dd2ef900-88dc-42cb-807f-f412cf70c73e
-# ╟─cb17bdbc-0905-4b3f-8765-57beb964904d
 # ╟─305154c9-8e76-4789-b193-aed0af0e96e9
 # ╟─122cf668-4b3b-4e75-9c53-6a8f70f45059
 # ╟─24c2cafa-d7f9-4a93-a964-265a373b43ba
@@ -1821,6 +1840,8 @@ version = "3.5.0+0"
 # ╟─c8d96e96-4b76-4192-9a66-6c1fca243bac
 # ╟─8f8591f7-2d77-40bf-9013-5349274d267d
 # ╟─9ded6694-4b7b-4e0d-a86f-a00e6f7208c0
+# ╟─19a04cb9-146b-4131-9221-c613ed3d7704
+# ╟─fc89a836-28ba-40fa-ab91-b53503899189
 # ╟─0ad512d8-227c-44e7-b3c2-8d0d27b123b4
 # ╟─6a7b716e-ffa1-4725-b174-2b9b00342fcc
 # ╟─c09cd562-30ac-418a-b047-d9687d665b4a
@@ -1830,9 +1851,9 @@ version = "3.5.0+0"
 # ╟─f09fd24a-83d0-4acd-b749-a06a27743c71
 # ╟─068b5e76-4a38-4f85-a23b-88ea78b06e30
 # ╟─bcdbf594-82b0-4045-837f-e46f1c729a05
-# ╟─7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
 # ╟─51a5ea45-74ea-4ecf-bada-1eda0fb2b6c6
 # ╟─596e1cfb-e861-4301-a08e-4bb3aae3f923
+# ╟─7bb20ce4-f94e-4c30-a90e-1fe1088bf8e6
 # ╟─5f9d385d-e72e-4491-8a41-be6536e823e8
 # ╟─bbcfebf5-9fbb-4f2c-b0f4-fe8f7a9cc21f
 # ╟─232cf949-c5d5-462e-b26e-f37eb2a7cfdd

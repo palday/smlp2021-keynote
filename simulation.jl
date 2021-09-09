@@ -235,32 +235,28 @@ MixedModels.likelihoodratiotest(m0, m1)
 # caterpillar(m0)
 
 # ╔═╡ da809fbc-131e-4bed-b221-58e1e25a67e5
-shrinkageplot(m0)
+# shrinkageplot(m0)
 
 # ╔═╡ c3c315b9-eb3e-4a8e-b528-85367ff568c1
 # caterpillar(m1)
 
 # ╔═╡ d703bd60-37fb-4611-9f00-12ce716ed9e7
-shrinkageplot(m1)
+# shrinkageplot(m0)
 
 # ╔═╡ dd586970-9cb9-425e-8492-af194730c371
-results = let #get!(cache, (m0, n_sim, fitform)) do 
-	# this is actually generating the same data twice
-	# which is kinda inefficient but makes for simpler code
-	alternative = simulate_fit_different_form(MersenneTwister(24), n_sim, m0, fitform, design; contrasts)
-	#bootstrapped_alternative = parametricbootstrap(MersenneTwister(24), n_sim, m1)
-	generating = parametricbootstrap(MersenneTwister(24), n_sim, m0)
-	(; alternative, generating)
-end
+# results = get!(cache, (m0, n_sim, fitform)) do 
+# 	# this is actually generating the same data twice
+# 	# which is kinda inefficient but makes for simpler code
+# 	alternative = simulate_fit_different_form(MersenneTwister(24), n_sim, m0, fitform, design; contrasts)
+# 	generating = parametricbootstrap(MersenneTwister(24), n_sim, m0)
+# 	(; alternative, generating)
+# end
 
 # ╔═╡ ddb5fb01-64d8-483d-9df0-b2f7b4b750ef
-ridgeplot(results.generating; xlabel="Estimate", title="Using the true model")
+# ridgeplot(results.generating; xlabel="Estimate", title="Using the true model")
 
 # ╔═╡ 07307417-6dd5-40ac-99f8-599b69ec237d
-ridgeplot(results.alternative; xlabel="Estimate", title="Using the simplified model")
-
-# ╔═╡ 1bb76eed-4aad-492e-8225-d6878cb5f41d
-# ridgeplot(results.bootstrapped_alternative)
+# ridgeplot(results.alternative; xlabel="Estimate", title="Using the simplified model")
 
 # ╔═╡ 930e090c-91c4-495a-9802-938dfe6aaf88
 md"""
@@ -281,118 +277,210 @@ kb07contrasts = Dict(:spkr => EffectsCoding(), :prec => EffectsCoding(), :load =
 # ╔═╡ c72c65ff-94c9-43d4-97e0-65e56ba9f90c
 kb07max = fit(MixedModel, @formula(rt_trunc ~ 1+spkr*prec*load+(1+spkr*prec*load|subj)+(1+spkr*prec*load|item)), kb07; contrasts=kb07contrasts, thin=1)
 
+# ╔═╡ ef79ad8d-f17f-40f2-b8f4-bfc0d4ebc906
+# LocalResource(
+# 	let fig = Figure(), fitlog = kb07max.optsum.fitlog, m = kb07max
+# 		ppll = Node(Point2f0[])
+# 		axll = Axis(fig[1, 1])
+# 		lines!(axll, ppll)
+# 		axll.ylabel = "-2 log likelihood"
+# 		hidexdecorations!(axll)
+
+# 		ppθ = Node(zeros(Float32, length(m.θ), 0))
+# 		isvar = Int.(m.θ .!= 0)
+# 		grps = mapreduce(vcat, enumerate(m.reterms)) do (idx, re)
+# 			idx * ones(Int, MixedModels.nθ(re))
+# 		end
+# 		cols = cgrad(:Dark2_8; categorical=unique(grps), alpha=0.6)[grps]
+# 		labs = string.(MixedModels.fname.(m.reterms[grps]))
+
+# 		axθ = Axis(fig[2, 1])
+# 		s = series!(axθ, ppθ; solid_color=cols, labels=labs)
+# 		axislegend(axθ; unique=true)
+# 		axθ.xlabel = "iteration"
+# 		axθ.ylabel = "θ"
+# 		linkxaxes!(axll, axθ)
+
+# 		vid = record(fig, joinpath(path, "ll_kb07max.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
+# 			push!(ppll[], Point2f0(idx, ll))
+# 			ppθ[] = hcat(ppθ[], reshape(θ, :, 1))
+# 			autolimits!(axθ)
+# 			autolimits!(axll)
+# 		end
+# 		vid
+# 	end
+# )
+
+# ╔═╡ 1e2c3e07-0c6c-4577-8cf6-c3edeac2a2b7
+# LocalResource(
+# 	let fig = Figure(), fitlog = kb07max.optsum.fitlog, m = kb07max
+# 		supertitle = Node("-2 log likelihood: ")
+# 		l1 = Label(fig[1, 1], supertitle, textsize = 15)
+# 		l1.tellwidth = false
+# 		itertitle = Node("iter:")
+# 		l2 = Label(fig[1, 2], itertitle, textsize = 15)
+# 		l2.tellwidth = false
+# 		titlelayout = GridLayout()
+# 		fig[1, 1:2] = titlelayout
+
+# 		axpar = Axis(fig[2, :])
+# 		axpar.tellwidth = true
+# 		θs = Node(copy(m.optsum.initial))
+# 		xs = 1:length(θs[])
+# 		iter = Node(1.0)
+# 		maxiter = length(fitlog)
+# 		idx = 1
+# 		color = lift(iter) do iter
+# 			(:black, 0.75 ^ (iter - idx))
+# 		end
+# 		scatter!(axpar, xs, θs; color)
+# 		lines!(axpar, xs, θs; color)
+# 		autolimits!(axpar)
+
+# 		θnames = sizehint!(String[], sum(nθ, m.reterms))
+# 		for (g, gname) in enumerate(fnames(m))
+# 			cnms = coefnames(m.reterms[g])
+# 			for i in 1:length(cnms), j in 1:i
+# 				if i == j
+# 					push!(θnames, string("σ_", gname, "_", first(cnms[i],10)))
+# 				else
+# 					push!(θnames, string("ρ_", gname, "_", first(cnms[j],10), "_", first(cnms[i],10)))
+# 				end		
+# 			end
+# 		end
+# 		axpar.xticks[] = (xs, θnames)
+# 		axpar.xticklabelrotation[] = pi/4
+# 		axpar.xlabel = "θ components"
+# 		axpar.ylabel = "θ values"
+
+# 		vid = record(fig, joinpath(path, "theta_kb07max.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
+# 			iter[] = idx
+# 			color = lift(iter) do iter
+# 				(:black, 0.75 ^ (iter - idx))
+# 			end
+# 			scatter!(axpar, xs, θ; color)
+# 			lines!(axpar, xs, θ; color)
+# 			supertitle[] = "-2 log likelihood: $(round(Int,ll))"
+# 			itertitle[] = "iter: $(idx)"
+# 			autolimits!(axpar)
+# 		end
+# 		vid
+
+# 	end
+# )
+
 # ╔═╡ 63e762e3-a516-4028-9b19-def07379cee7
-kb07max.rePCA
+# kb07max.rePCA
 
 # ╔═╡ 78aa4721-ad0a-4974-8b0e-8dae235182ef
-VarCorr(kb07max)
+# VarCorr(kb07max)
 
 # ╔═╡ 12f15774-b10b-4788-a00d-54bb8cd1c148
 kb07red = fit(MixedModel, @formula(rt_trunc ~ 1 + prec * spkr * load + (1|subj) + (1+prec|item)), kb07; contrasts=kb07contrasts, thin=1)
 
-# ╔═╡ cc24d99b-5652-4fd2-a211-1919192d1612
-kb07int = fit(MixedModel, @formula(rt_trunc ~ 1+spkr*prec*load+(1|subj)+(1|item)), kb07; contrasts=kb07contrasts, thin=1)
-
 # ╔═╡ 643fd8e5-9cb7-4083-85f5-a1976cfd9791
 MixedModels.likelihoodratiotest(kb07red, kb07max)
+
+# ╔═╡ b8207f1a-b3f9-4a14-af33-8f25a62cc46b
+# LocalResource(
+# 	let fig = Figure(), fitlog = kb07red.optsum.fitlog, m = kb07red
+# 		ppll = Node(Point2f0[])
+# 		axll = Axis(fig[1, 1])
+# 		lines!(axll, ppll)
+# 		axll.ylabel = "-2 log likelihood"
+# 		hidexdecorations!(axll)
+
+# 		ppθ = Node(zeros(Float32, length(m.θ), 0))
+# 		isvar = Int.(m.θ .!= 0)
+# 		grps = mapreduce(vcat, enumerate(m.reterms)) do (idx, re)
+# 			idx * ones(Int, MixedModels.nθ(re))
+# 		end
+# 		cols = cgrad(:Dark2_8; categorical=unique(grps), alpha=0.6)[grps]
+# 		labs = string.(MixedModels.fname.(m.reterms[grps]))
+
+# 		axθ = Axis(fig[2, 1])
+# 		s = series!(axθ, ppθ; solid_color=cols, labels=labs)
+# 		axislegend(axθ; unique=true)
+# 		axθ.xlabel = "iteration"
+# 		axθ.ylabel = "θ"
+# 		linkxaxes!(axll, axθ)
+
+# 		vid = record(fig, joinpath(path, "ll_kb07red.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
+# 			push!(ppll[], Point2f0(idx, ll))
+# 			ppθ[] = hcat(ppθ[], reshape(θ, :, 1))
+# 			autolimits!(axθ)
+# 			autolimits!(axll)
+# 		end
+# 		vid
+# 	end
+# )
+
+# ╔═╡ 8e386ce0-955f-4af3-9793-b23a8cb7adcb
+# LocalResource(
+# 	let fig = Figure(), fitlog = kb07red.optsum.fitlog, m = kb07red
+# 		supertitle = Node("-2 log likelihood: ")
+# 		l1 = Label(fig[1, 1], supertitle, textsize = 15)
+# 		l1.tellwidth = false
+# 		itertitle = Node("iter:")
+# 		l2 = Label(fig[1, 2], itertitle, textsize = 15)
+# 		l2.tellwidth = false
+# 		titlelayout = GridLayout()
+# 		fig[1, 1:2] = titlelayout
+
+# 		axpar = Axis(fig[2, :])
+# 		axpar.tellwidth = true
+# 		θs = Node(copy(m.optsum.initial))
+# 		xs = 1:length(θs[])
+# 		iter = Node(1.0)
+# 		maxiter = length(fitlog)
+# 		idx = 1
+# 		color = lift(iter) do iter
+# 			(:black, 0.75 ^ (iter - idx))
+# 		end
+# 		scatter!(axpar, xs, θs; color)
+# 		lines!(axpar, xs, θs; color)
+# 		autolimits!(axpar)
+
+# 		θnames = sizehint!(String[], sum(nθ, m.reterms))
+# 		for (g, gname) in enumerate(fnames(m))
+# 			cnms = coefnames(m.reterms[g])
+# 			for i in 1:length(cnms), j in 1:i
+# 				if i == j
+# 					push!(θnames, string("σ_", gname, "_", first(cnms[i],10)))
+# 				else
+# 					push!(θnames, string("ρ_", gname, "_", first(cnms[j],10), "_", first(cnms[i],10)))
+# 				end		
+# 			end
+# 		end
+# 		axpar.xticks[] = (xs, θnames)
+# 		axpar.xticklabelrotation[] = pi/4
+# 		axpar.xlabel = "θ components"
+# 		axpar.ylabel = "θ values"
+
+# 		vid = record(fig, joinpath(path, "theta_kb07red.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
+# 			iter[] = idx
+# 			color = lift(iter) do iter
+# 				(:black, 0.75 ^ (iter - idx))
+# 			end
+# 			scatter!(axpar, xs, θ; color)
+# 			lines!(axpar, xs, θ; color)
+# 			supertitle[] = "-2 log likelihood: $(round(Int,ll))"
+# 			itertitle[] = "iter: $(idx)"
+# 			autolimits!(axpar)
+# 		end
+# 		vid
+
+# 	end
+# )
+
+# ╔═╡ cc24d99b-5652-4fd2-a211-1919192d1612
+kb07int = fit(MixedModel, @formula(rt_trunc ~ 1+spkr*prec*load+(1|subj)+(1|item)), kb07; contrasts=kb07contrasts, thin=1)
 
 # ╔═╡ 2c3967e8-9aee-49a0-913c-6636294036e3
 path = mktempdir();
 
 # ╔═╡ 9a93e06e-4ec5-48cc-bc18-33d918d26506
 frate = 10;
-
-# ╔═╡ ef79ad8d-f17f-40f2-b8f4-bfc0d4ebc906
-LocalResource(
-	let fig = Figure(), fitlog = kb07max.optsum.fitlog, m = kb07max
-		ppll = Node(Point2f0[])
-		axll = Axis(fig[1, 1])
-		lines!(axll, ppll)
-		axll.ylabel = "-2 log likelihood"
-		hidexdecorations!(axll)
-
-		ppθ = Node(zeros(Float32, length(m.θ), 0))
-		isvar = Int.(m.θ .!= 0)
-		grps = mapreduce(vcat, enumerate(m.reterms)) do (idx, re)
-			idx * ones(Int, MixedModels.nθ(re))
-		end
-		cols = cgrad(:Dark2_8; categorical=unique(grps), alpha=0.6)[grps]
-		labs = string.(MixedModels.fname.(m.reterms[grps]))
-
-		axθ = Axis(fig[2, 1])
-		s = series!(axθ, ppθ; solid_color=cols, labels=labs)
-		axislegend(axθ; unique=true)
-		axθ.xlabel = "iteration"
-		axθ.ylabel = "θ"
-		linkxaxes!(axll, axθ)
-
-		vid = record(fig, joinpath(path, "ll_kb07max.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
-			push!(ppll[], Point2f0(idx, ll))
-			ppθ[] = hcat(ppθ[], reshape(θ, :, 1))
-			autolimits!(axθ)
-			autolimits!(axll)
-		end
-		vid
-	end
-)
-
-# ╔═╡ 1e2c3e07-0c6c-4577-8cf6-c3edeac2a2b7
-LocalResource(
-	let fig = Figure(), fitlog = kb07max.optsum.fitlog, m = kb07max
-		supertitle = Node("-2 log likelihood: ")
-		l1 = Label(fig[1, 1], supertitle, textsize = 15)
-		l1.tellwidth = false
-		itertitle = Node("iter:")
-		l2 = Label(fig[1, 2], itertitle, textsize = 15)
-		l2.tellwidth = false
-		titlelayout = GridLayout()
-		fig[1, 1:2] = titlelayout
-
-		axpar = Axis(fig[2, :])
-		axpar.tellwidth = true
-		θs = Node(copy(m.optsum.initial))
-		xs = 1:length(θs[])
-		iter = Node(1.0)
-		maxiter = length(fitlog)
-		idx = 1
-		color = lift(iter) do iter
-			(:black, 0.75 ^ (iter - idx))
-		end
-		scatter!(axpar, xs, θs; color)
-		lines!(axpar, xs, θs; color)
-		autolimits!(axpar)
-
-		θnames = sizehint!(String[], sum(nθ, m.reterms))
-		for (g, gname) in enumerate(fnames(m))
-			cnms = coefnames(m.reterms[g])
-			for i in 1:length(cnms), j in 1:i
-				if i == j
-					push!(θnames, string("σ_", gname, "_", cnms[i]))
-				else
-					push!(θnames, string("ρ_", gname, "_", cnms[j], "_", cnms[i]))
-				end		
-			end
-		end
-		axpar.xticks[] = (xs, θnames)
-		axpar.xticklabelrotation[] = pi/4
-		axpar.xlabel = "θ components"
-		axpar.ylabel = "θ values"
-
-		vid = record(fig, joinpath(path, "theta_kb07max.mp4"), enumerate(fitlog), framerate = frate) do (idx, (θ, ll))
-			iter[] = idx
-			color = lift(iter) do iter
-				(:black, 0.75 ^ (iter - idx))
-			end
-			scatter!(axpar, xs, θ; color)
-			lines!(axpar, xs, θ; color)
-			supertitle[] = "-2 log likelihood: $(round(Int,ll))"
-			itertitle[] = "iter: $(idx)"
-			autolimits!(axpar)
-		end
-		vid
-
-	end
-)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1647,7 +1735,7 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═f9949a62-b108-11eb-37d6-bb0790f7899a
+# ╟─f9949a62-b108-11eb-37d6-bb0790f7899a
 # ╟─7faaf93e-b02a-4a5b-9c1d-2d60488f0590
 # ╟─da2e5642-3188-4f0d-8a8a-402a64860366
 # ╠═d2584c26-9db7-4f4e-afbc-9c1626130a16
@@ -1675,7 +1763,7 @@ version = "3.5.0+0"
 # ╟─ccae902d-7a27-46c3-b3a9-03d9d9fb8c3c
 # ╟─a6e3bf43-3047-4dcf-a278-02451db3a817
 # ╟─8652fb19-6232-4c02-81c5-0c7318a58325
-# ╟─540d24c7-2132-4a37-ae0d-33b7a8ee009e
+# ╠═540d24c7-2132-4a37-ae0d-33b7a8ee009e
 # ╟─bf20a161-0d37-4e49-a7b9-e79c33cbbbe8
 # ╠═ed212558-f306-4c8b-a70a-f91eaadf812c
 # ╠═4c4b9ad9-3233-4548-a3a3-76329597befc
@@ -1686,18 +1774,19 @@ version = "3.5.0+0"
 # ╠═dd586970-9cb9-425e-8492-af194730c371
 # ╠═ddb5fb01-64d8-483d-9df0-b2f7b4b750ef
 # ╟─07307417-6dd5-40ac-99f8-599b69ec237d
-# ╠═1bb76eed-4aad-492e-8225-d6878cb5f41d
 # ╟─930e090c-91c4-495a-9802-938dfe6aaf88
 # ╟─1df986f6-d7c7-4fc1-aa6d-5ede2ece132a
 # ╠═6194e117-f2ef-4c95-8d47-869d862cac8e
-# ╟─c72c65ff-94c9-43d4-97e0-65e56ba9f90c
-# ╟─ef79ad8d-f17f-40f2-b8f4-bfc0d4ebc906
-# ╟─1e2c3e07-0c6c-4577-8cf6-c3edeac2a2b7
+# ╠═c72c65ff-94c9-43d4-97e0-65e56ba9f90c
+# ╠═ef79ad8d-f17f-40f2-b8f4-bfc0d4ebc906
+# ╠═1e2c3e07-0c6c-4577-8cf6-c3edeac2a2b7
 # ╠═63e762e3-a516-4028-9b19-def07379cee7
 # ╠═78aa4721-ad0a-4974-8b0e-8dae235182ef
 # ╠═12f15774-b10b-4788-a00d-54bb8cd1c148
-# ╠═cc24d99b-5652-4fd2-a211-1919192d1612
 # ╠═643fd8e5-9cb7-4083-85f5-a1976cfd9791
+# ╠═b8207f1a-b3f9-4a14-af33-8f25a62cc46b
+# ╠═8e386ce0-955f-4af3-9793-b23a8cb7adcb
+# ╠═cc24d99b-5652-4fd2-a211-1919192d1612
 # ╟─2c3967e8-9aee-49a0-913c-6636294036e3
 # ╟─9a93e06e-4ec5-48cc-bc18-33d918d26506
 # ╟─00000000-0000-0000-0000-000000000001
