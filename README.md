@@ -1,6 +1,6 @@
 ---
 title: "Putting the NO in ANOVA: the past, present and future (role) of statistics in linguistics and psychology"
-date: Early 2021
+presented: 9 September 2021
 author: Phillip M. Alday
 ---
 
@@ -11,3 +11,7 @@ In this vein, I will highlight that classical tools were often insufficient even
 I will focus on modern statistical approaches as a tool for theory building -- both for theories with stochastic and variable components and as a tool for handling messy and variable real-world data -- instead of as an alternative to theory building.
 For example, I will touch upon how modern approaches allow for an integrative notion of intra- and interindividual variation, thus addressing an inherent data complexity and theoretical concern and allowing for nearly every study to be an individual-differences study.
 Finally, I will conclude with my vision for (the role of) statistics in the future of psychology and linguistics and provide a few suggestions for how to achieve that vision.
+
+---
+
+[![DOI](https://zenodo.org/badge/331420916.svg)](https://zenodo.org/badge/latestdoi/331420916)
